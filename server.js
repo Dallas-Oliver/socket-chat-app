@@ -7,7 +7,6 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", function(socket) {
-  console.log(socket.id);
   console.log("Client connected.");
   socket.on("chat message", msg => {
     console.log(`message: ${msg}`);
@@ -22,6 +21,11 @@ io.on("connection", function(socket) {
   socket.on("welcome msg", msg => {
     console.log(msg);
     socket.broadcast.emit("welcome msg", msg);
+  });
+
+  socket.on("username", username => {
+    console.log(`${username} joined the chat`);
+    socket.broadcast.emit("username", username);
   });
 });
 

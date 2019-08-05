@@ -27,6 +27,10 @@
         border: 1px solid black;
         margin: 20px;
       }
+
+      #msg-stream {
+        list-style-type: none;
+      }
     </style>
     <link
       rel="stylesheet"
@@ -45,7 +49,7 @@
       <input id="chat-box" />
       <button id="send-msg">Send</button>
     </section>
-    <script src="./nickname_generator.js" type="text/javascript"></script>
+
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
@@ -53,22 +57,57 @@
       const chatBox = document.getElementById("chat-box");
       const msgStream = document.getElementById("msg-stream");
       const sendButton = document.getElementById("send-msg");
+      let username;
+
+      function randomUsername() {
+        adjectives = [
+          "ecstatic",
+          "bouncy",
+          "tall",
+          "quiet",
+          "scary",
+          "flippant",
+          "excitable",
+          "friendly",
+          "fearful"
+        ];
+        animals = [
+          "aardvark",
+          "baboon",
+          "badger",
+          "camel",
+          "eagle",
+          "clam",
+          "penguin",
+          "falcon",
+          "gecko",
+          "hedgehog"
+        ];
+        let adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+
+        let animal = animals[Math.floor(Math.random() * animals.length)];
+
+        return `${adj}_${animal}`;
+      }
 
       function sendMessage() {
         socket.emit("chat message", chatBox.value);
+
         const li = document.createElement("li");
         li.textContent = chatBox.value;
         msgStream.append(li);
+        chatBox.value = "";
       }
 
       socket.on("connect", () => {
-        console.log(socket.id);
-        const nickName = NameGenerator.randomNickname();
-        console.log(nickName);
+        username = randomUsername();
+        console.log(username);
+
         const li = document.createElement("li");
-        li.textContent = "Welcome to the chat room";
+        li.textContent = `Welcome to the chat room, you've been given a temporary username: ${username}`;
         msgStream.append(li);
         socket.emit("welcome msg", "Another user has joined the chat room");
+        socket.emit("username", username);
       });
 
       socket.on("welcome msg", msg => {
@@ -81,7 +120,7 @@
 
       socket.on("chat message", msg => {
         const li = document.createElement("li");
-        li.textContent = msg;
+        li.textContent = `${username}: ${msg}`;
         msgStream.append(li);
       });
 
