@@ -26,6 +26,7 @@
         width: 80%;
         border: 1px solid black;
         margin: 20px;
+        color: rgb(r, g, b);
       }
 
       #msg-stream {
@@ -59,6 +60,14 @@
       const sendButton = document.getElementById("send-msg");
       let username;
 
+      function randomColorForUsername() {
+        let r,
+          g,
+          b = Math.floor(Math.random * 255);
+
+        return `rgb(${r}, ${g}, ${b});`;
+      }
+
       function randomUsername() {
         adjectives = [
           "ecstatic",
@@ -87,27 +96,29 @@
 
         let animal = animals[Math.floor(Math.random() * animals.length)];
 
-        return `${adj}_${animal}`;
+        const username = `${adj}_${animal}`;
       }
 
       function sendMessage() {
-        socket.emit("chat message", chatBox.value);
+        socket.emit("chat message", `${username}: ${chatBox.value}`);
 
         const li = document.createElement("li");
-        li.textContent = chatBox.value;
+        li.textContent = `${username}: ${chatBox.value}`;
         msgStream.append(li);
         chatBox.value = "";
       }
 
       socket.on("connect", () => {
         username = randomUsername();
-        console.log(username);
 
         const li = document.createElement("li");
         li.textContent = `Welcome to the chat room, you've been given a temporary username: ${username}`;
         msgStream.append(li);
-        socket.emit("welcome msg", "Another user has joined the chat room");
-        socket.emit("username", username);
+
+        socket.emit(
+          "welcome msg",
+          `Another user ${username} has joined the chat room`
+        );
       });
 
       socket.on("welcome msg", msg => {
@@ -120,7 +131,7 @@
 
       socket.on("chat message", msg => {
         const li = document.createElement("li");
-        li.textContent = `${username}: ${msg}`;
+        li.textContent = msg;
         msgStream.append(li);
       });
 
