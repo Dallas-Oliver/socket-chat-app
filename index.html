@@ -21,12 +21,50 @@
         margin-left: 20px;
       }
 
+      #container {
+        height: 100%;
+        display: grid;
+        grid-template-columns: 70% 30%;
+        grid-template-rows: 10% 80% 10%;
+      }
+
+      #header {
+        grid-column-start: 1;
+        grid-column-end: 1;
+        grid-row-start: 1;
+        grid-row-end: 1;
+      }
+
+      #video-container {
+        grid-column-start: 1;
+        grid-column-end: 1;
+        grid-row-start: 2;
+        grid-row-end: 2;
+      }
+
+      #video {
+        width: 100%;
+        height: 100%;
+      }
+
       #chat-container {
-        height: 70%;
+        grid-column-start: 2;
+        grid-column-end: 2;
+        grid-row-start: 1;
+        grid-row-end: span 2;
+
         width: 80%;
         border: 1px solid black;
         margin: 20px;
         color: rgb(r, g, b);
+      }
+
+      #input {
+        margin: 20px;
+        grid-column-start: 2;
+        grid-column-end: 2;
+        grid-row-start: 3;
+        grid-row-end: 3;
       }
 
       #msg-stream {
@@ -41,15 +79,26 @@
     />
   </head>
   <body>
-    <h1>Socket Chat App</h1>
-    <section id="chat-container">
-      <ul id="msg-stream"></ul>
-    </section>
+    <div id="container">
+      <h1 id="header">omegle Clone</h1>
 
-    <section id="input">
-      <input id="chat-box" />
-      <button id="send-msg">Send</button>
-    </section>
+      <section id="video-container">
+        <video id="video"></video>
+      </section>
+      <section id="chat-container">
+        <ul id="msg-stream"></ul>
+      </section>
+
+      <!-- <section id="login">
+        <input id="login-input" />
+        <button id="submit-login">Login</button>
+      </section> -->
+
+      <section id="input">
+        <input id="chat-box" />
+        <button id="send-msg">Send</button>
+      </section>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
 
@@ -58,7 +107,22 @@
       const chatBox = document.getElementById("chat-box");
       const msgStream = document.getElementById("msg-stream");
       const sendButton = document.getElementById("send-msg");
+
       let username;
+
+      function getVideo() {
+        navigator.mediaDevices
+          .getUserMedia({ video: true, audio: false })
+          .then(localMediaStream => {
+            console.log(localMediaStream);
+
+            video.srcObject = localMediaStream;
+            video.play();
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      }
 
       function randomColorForUsername() {
         let r,
@@ -96,7 +160,7 @@
 
         let animal = animals[Math.floor(Math.random() * animals.length)];
 
-        const username = `${adj}_${animal}`;
+        return `${adj}_${animal}`;
       }
 
       function sendMessage() {
@@ -108,12 +172,25 @@
         chatBox.value = "";
       }
 
+      function createChatMessage(message) {
+        const li = document.createElement("li");
+        li.textContent = message;
+        msgStream.append(li);
+      }
+
       socket.on("connect", () => {
+        getVideo();
+        socket.emit();
+
         username = randomUsername();
 
-        const li = document.createElement("li");
-        li.textContent = `Welcome to the chat room, you've been given a temporary username: ${username}`;
-        msgStream.append(li);
+        // const span = document.createElement("span");
+        // span.textContent = username;
+        // span.style.color = randomColorForUsername();
+
+        createChatMessage(
+          `Welcome to the chat room, you've been given a temporary username: ${username}`
+        );
 
         socket.emit(
           "welcome msg",
@@ -122,17 +199,22 @@
       });
 
       socket.on("welcome msg", msg => {
-        const li = document.createElement("li");
-        li.textContent = msg;
-        msgStream.append(li);
+        createChatMessage(msg);
       });
 
-      socket.on("disconnect", msg => {});
+      socket.on("disconnect", () => {
+        socket.emit(
+          "disconnect msg",
+          `${username} has disconnected from the chat`
+        );
+      });
+
+      socket.on("disconnect msg", msg => {
+        console.log(msg);
+      });
 
       socket.on("chat message", msg => {
-        const li = document.createElement("li");
-        li.textContent = msg;
-        msgStream.append(li);
+        createChatMessage(msg);
       });
 
       sendButton.addEventListener("click", () => sendMessage());

@@ -19,8 +19,9 @@ io.on("connection", function(socket) {
   });
 
   // Disconnect listener
-  socket.on("disconnect", function() {
+  socket.on("disconnect", msg => {
     console.log("Client disconnected.");
+    socket.broadcast.emit("disconnect msg", msg);
   });
 });
 
