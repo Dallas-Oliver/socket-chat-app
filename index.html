@@ -80,7 +80,7 @@
   </head>
   <body>
     <div id="container">
-      <h1 id="header">omegle Clone</h1>
+      <h1 id="header">Chat Room App</h1>
 
       <section id="video-container">
         <video id="video"></video>
@@ -103,16 +103,22 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
-      const socket = io.connect();
       const chatBox = document.getElementById("chat-box");
       const msgStream = document.getElementById("msg-stream");
       const sendButton = document.getElementById("send-msg");
+
+      const socket = io.connect();
 
       let username;
 
       function getVideo() {
         navigator.mediaDevices
-          .getUserMedia({ video: true, audio: false })
+          .getUserMedia({
+            video: true,
+            audio: false,
+            width: { min: 1280 },
+            height: { min: 720 }
+          })
           .then(localMediaStream => {
             console.log(localMediaStream);
 
@@ -180,7 +186,6 @@
 
       socket.on("connect", () => {
         getVideo();
-        socket.emit();
 
         username = randomUsername();
 
@@ -218,6 +223,7 @@
       });
 
       sendButton.addEventListener("click", () => sendMessage());
+      sendButton.addEventListener("keyup", e => sendMessage(e));
     </script>
   </body>
 </html>
