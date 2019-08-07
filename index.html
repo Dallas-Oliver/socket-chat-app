@@ -24,7 +24,7 @@
       #container {
         height: 100%;
         display: grid;
-        grid-template-columns: 70% 30%;
+        grid-template-columns: 65% 35%;
         grid-template-rows: 10% 80% 10%;
       }
 
@@ -45,18 +45,28 @@
       #video {
         width: 100%;
         height: 100%;
+        border-right: 1px solid rgba(0, 0, 0, 0.5);
+      }
+
+      #msg-stream {
+        padding-left: 0px;
+        margin: 20px;
+        font-size: 20px;
+      }
+
+      #canvas {
+        margin: 20px;
       }
 
       #chat-container {
         grid-column-start: 2;
         grid-column-end: 2;
-        grid-row-start: 1;
+        grid-row-start: 2;
         grid-row-end: span 2;
+        width: 94%;
+        margin: 0px;
 
-        width: 80%;
-        border: 1px solid black;
-        margin: 20px;
-        color: rgb(r, g, b);
+        overflow: scroll;
       }
 
       #input {
@@ -96,7 +106,7 @@
       </section> -->
 
       <section id="input">
-        <input id="chat-box" />
+        <textarea id="chat-box"></textarea>
         <button id="send-msg">Send</button>
         <button id="capture-img">Take photo</button>
       </section>
@@ -175,12 +185,7 @@
       }
 
       function sendMessage() {
-        socket.emit("chat message", {
-          message: `${username}: ${chatBox.value}`,
-          media: captureImage(),
-          fingerprint: socket.id,
-          imageType: "image/jpeg"
-        });
+        socket.emit("chat message", `${username}: ${chatBox.value}`);
 
         const li = document.createElement("li");
         li.textContent = `${username}: ${chatBox.value}`;
@@ -228,20 +233,7 @@
       });
 
       socket.on("chat message", async msg => {
-        console.log(msg.media);
-
-        const canvas = document.createElement("canvas");
-        canvas.width = "200px";
-        canvas.height = "150px";
-        const ctx = canvas.getContext("2d");
-        const image = await ctx.drawImage(
-          new buffer(msg.media, "base64"),
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-        msgStream.append(ctx);
+        await createChatMessage(msg);
       });
 
       sendButton.addEventListener("click", () => sendMessage());
