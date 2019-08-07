@@ -122,8 +122,6 @@
           audio: false
         })
         .then(localMediaStream => {
-          console.log(localMediaStream);
-
           video.srcObject = localMediaStream;
           video.play();
         })
@@ -133,7 +131,8 @@
 
       function captureImage() {
         const image = ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        return image;
+        const data = canvas.toDataURL("image/jpeg");
+        return data;
       }
 
       function randomColorForUsername() {
@@ -179,9 +178,8 @@
         socket.emit("chat message", {
           message: `${username}: ${chatBox.value}`,
           media: captureImage(),
-          ip: `127.0.0.1`,
           fingerprint: socket.id,
-          videoType: "webm"
+          imageType: "image/jpeg"
         });
 
         const li = document.createElement("li");
@@ -194,6 +192,7 @@
         const li = document.createElement("li");
         li.textContent = message;
         msgStream.append(li);
+        console.log(message);
       }
 
       socket.on("connect", () => {
@@ -228,8 +227,21 @@
         console.log(msg);
       });
 
-      socket.on("chat message", msg => {
-        createChatMessage(msg);
+      socket.on("chat message", async msg => {
+        console.log(msg.media);
+
+        const canvas = document.createElement("canvas");
+        canvas.width = "200px";
+        canvas.height = "150px";
+        const ctx = canvas.getContext("2d");
+        const image = await ctx.drawImage(
+          new buffer(msg.media, "base64"),
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+        msgStream.append(ctx);
       });
 
       sendButton.addEventListener("click", () => sendMessage());
