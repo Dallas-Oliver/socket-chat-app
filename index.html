@@ -87,6 +87,7 @@
       </section>
       <section id="chat-container">
         <ul id="msg-stream"></ul>
+        <canvas id="canvas" width="200px" height="150px"></canvas>
       </section>
 
       <!-- <section id="login">
@@ -97,6 +98,7 @@
       <section id="input">
         <input id="chat-box" />
         <button id="send-msg">Send</button>
+        <button id="capture-img">Take photo</button>
       </section>
     </div>
 
@@ -106,28 +108,32 @@
       const chatBox = document.getElementById("chat-box");
       const msgStream = document.getElementById("msg-stream");
       const sendButton = document.getElementById("send-msg");
+      const captureButton = document.getElementById("capture-img");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
 
       const socket = io.connect();
 
       let username;
 
-      function getVideo() {
-        navigator.mediaDevices
-          .getUserMedia({
-            video: true,
-            audio: false,
-            width: { min: 1280 },
-            height: { min: 720 }
-          })
-          .then(localMediaStream => {
-            console.log(localMediaStream);
+      navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+          audio: false
+        })
+        .then(localMediaStream => {
+          console.log(localMediaStream);
 
-            video.srcObject = localMediaStream;
-            video.play();
-          })
-          .catch(err => {
-            console.error(err);
-          });
+          video.srcObject = localMediaStream;
+          video.play();
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+      function captureImage() {
+        const image = ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        return image;
       }
 
       function randomColorForUsername() {
@@ -170,7 +176,13 @@
       }
 
       function sendMessage() {
-        socket.emit("chat message", `${username}: ${chatBox.value}`);
+        socket.emit("chat message", {
+          message: `${username}: ${chatBox.value}`,
+          media: captureImage(),
+          ip: `127.0.0.1`,
+          fingerprint: socket.id,
+          videoType: "webm"
+        });
 
         const li = document.createElement("li");
         li.textContent = `${username}: ${chatBox.value}`;
@@ -185,8 +197,6 @@
       }
 
       socket.on("connect", () => {
-        getVideo();
-
         username = randomUsername();
 
         // const span = document.createElement("span");
@@ -223,7 +233,7 @@
       });
 
       sendButton.addEventListener("click", () => sendMessage());
-      sendButton.addEventListener("keyup", e => sendMessage(e));
+      captureButton.addEventListener("click", () => captureImage());
     </script>
   </body>
 </html>

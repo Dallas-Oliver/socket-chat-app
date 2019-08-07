@@ -14,8 +14,9 @@ io.on("connection", function(socket) {
     socket.broadcast.emit("welcome msg", msg);
   });
 
-  socket.on("chat message", msg => {
-    socket.broadcast.emit("chat message", msg);
+  socket.on("chat message", data => {
+    console.log(data);
+    // socket.broadcast.emit("chat message", data);
   });
 
   // Disconnect listener
