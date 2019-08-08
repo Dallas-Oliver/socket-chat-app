@@ -64,7 +64,7 @@
         grid-row-start: 2;
         grid-row-end: 2;
         width: 94%;
-        margin: 20px;
+        margin: 20px 20px 0px 20px;
 
         overflow: scroll;
       }
@@ -75,6 +75,10 @@
         grid-column-end: 2;
         grid-row-start: 3;
         grid-row-end: 3;
+      }
+
+      #chat-box {
+        margin-bottom: 5px;
       }
 
       #msg-stream {
@@ -190,19 +194,22 @@
       }
 
       function sendMessage() {
-        socket.emit("chat message", `${username}: ${chatBox.value}`);
+        const chatMessage = `<li class='chat-msg'><span class='username'><strong>${username}</strong></span>: ${
+          chatBox.value
+        }</li>`;
+        socket.emit("chat message", chatMessage);
 
         const li = document.createElement("li");
-        li.textContent = `${username}: ${chatBox.value}`;
+        li.innerHTML = chatMessage;
+
         msgStream.append(li);
         chatBox.value = "";
       }
 
       function createChatMessage(message) {
         const li = document.createElement("li");
-        li.textContent = message;
+        li.innerHTML = message;
         msgStream.append(li);
-        console.log(message);
       }
 
       socket.on("connect", () => {
@@ -213,12 +220,12 @@
         // span.style.color = randomColorForUsername();
 
         createChatMessage(
-          `Welcome to the chat room, you've been given a temporary username: ${username}`
+          `<li class='chat-msg'>Welcome to the chat room, you've been given a temporary username: <span class='username'><strong>${username}</strong></span></li>`
         );
 
         socket.emit(
           "welcome msg",
-          `Another user ${username} has joined the chat room`
+          `<li class='chat-msg'>Another user <span class='username'><strong>${username}</strong></span> has joined the chat room</li>`
         );
       });
 
