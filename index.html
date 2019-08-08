@@ -25,7 +25,7 @@
         height: 100%;
         display: grid;
         grid-template-columns: 65% 35%;
-        grid-template-rows: 10% 80% 10%;
+        grid-template-rows: 10% 75% 15%;
       }
 
       #header {
@@ -62,9 +62,9 @@
         grid-column-start: 2;
         grid-column-end: 2;
         grid-row-start: 2;
-        grid-row-end: span 2;
+        grid-row-end: 2;
         width: 94%;
-        margin: 0px;
+        margin: 20px;
 
         overflow: scroll;
       }
@@ -97,7 +97,6 @@
       </section>
       <section id="chat-container">
         <ul id="msg-stream"></ul>
-        <canvas id="canvas" width="200px" height="150px"></canvas>
       </section>
 
       <!-- <section id="login">
@@ -106,9 +105,9 @@
       </section> -->
 
       <section id="input">
-        <textarea id="chat-box"></textarea>
-        <button id="send-msg">Send</button>
-        <button id="capture-img">Take photo</button>
+        <textarea class="form-control" type="text" id="chat-box"></textarea>
+        <button class="btn btn-light" id="send-msg">Send</button>
+        <button class="btn btn-light" id="capture-img">Take photo</button>
       </section>
     </div>
 
@@ -119,8 +118,6 @@
       const msgStream = document.getElementById("msg-stream");
       const sendButton = document.getElementById("send-msg");
       const captureButton = document.getElementById("capture-img");
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
 
       const socket = io.connect();
 
@@ -140,9 +137,17 @@
         });
 
       function captureImage() {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.height = 150;
+        canvas.width = 200;
         const image = ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const data = canvas.toDataURL("image/jpeg");
-        return data;
+        const li = document.createElement("li");
+        li.append(canvas);
+        msgStream.append(li);
+        console.log(canvas);
+        // const data = canvas.toDataURL("image/jpeg");
+        // return data;
       }
 
       function randomColorForUsername() {
