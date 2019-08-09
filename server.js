@@ -14,7 +14,6 @@ io.on("connection", function(socket) {
   });
 
   socket.on("chat message", data => {
-    console.log(data);
     io.emit(
       "chat message",
       `<li class='chat-msg'><span style="color:${
@@ -26,9 +25,19 @@ io.on("connection", function(socket) {
   });
 
   // Disconnect listener
-  socket.on("disconnect", msg => {
+  socket.on("disconnect", () => {
     console.log("Client disconnected.");
-    io.emit("disconnect msg", msg);
+    io.on("disconnect msg", data => {
+      console.log(data);
+      io.emit(
+        "disconnect msg",
+        `<li class='chat-msg'>another user <span style="color:${
+          data.color
+        }}" class='username'><strong>${
+          data.username
+        }</strong></span>: has diconnected</li>`
+      );
+    });
   });
 });
 

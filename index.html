@@ -160,7 +160,6 @@
         let b = Math.floor(Math.random() * 255);
 
         const color = `rgb(${r}, ${g}, ${b});`;
-        console.log(color);
         return color;
       }
 
@@ -196,21 +195,13 @@
       }
 
       function sendMessage() {
-        // const chatMessage = `<li class='chat-msg'><span style="color:${randomColorForUsername()}}" class='username'><strong>${username}</strong></span>: ${
-        //   chatBox.value
-        // }</li>`;
-
-        chatAttributes = {
+        const chatAttributes = {
           username: username,
           color: usernameColor,
           value: chatBox.value
         };
         socket.emit("chat message", chatAttributes);
 
-        // const li = document.createElement("li");
-        // li.innerHTML = chatMessage;
-
-        // msgStream.append(li);
         chatBox.value = "";
       }
 
@@ -224,12 +215,8 @@
         username = randomUsername();
         usernameColor = randomColorForUsername();
 
-        // const span = document.createElement("span");
-        // span.textContent = username;
-        // span.style.color = randomColorForUsername();
-
         createChatMessage(
-          `<li class='chat-msg'>Welcome to the chat room, you've been given a temporary username: <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>`
+          `<li class='chat-msg'>Welcome to the chat room!<br/> you've been given a temporary username: <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>`
         );
 
         socket.emit(
@@ -243,14 +230,16 @@
       });
 
       socket.on("disconnect", () => {
-        socket.emit(
-          "disconnect msg",
-          `${username} has disconnected from the chat`
-        );
+        chatAttributes = {
+          username: username,
+          color: usernameColor
+        };
+        socket.emit("disconnect msg", chatAttributes);
       });
 
       socket.on("disconnect msg", msg => {
         console.log(msg);
+        createChatMessage(msg);
       });
 
       socket.on("chat message", msg => {
