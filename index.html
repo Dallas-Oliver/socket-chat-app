@@ -18,7 +18,6 @@
       html {
         height: 100%;
         width: 100%;
-        margin-left: 20px;
       }
 
       #container {
@@ -33,6 +32,7 @@
         grid-column-end: 1;
         grid-row-start: 1;
         grid-row-end: 1;
+        margin: 20px 40px 20px 50px;
       }
 
       #video-container {
@@ -45,7 +45,6 @@
       #video {
         width: 100%;
         height: 100%;
-        border-right: 1px solid rgba(0, 0, 0, 0.5);
       }
 
       #msg-stream {
@@ -126,6 +125,7 @@
       const socket = io.connect();
 
       let username;
+      let usernamecolor;
 
       navigator.mediaDevices
         .getUserMedia({
@@ -155,11 +155,13 @@
       }
 
       function randomColorForUsername() {
-        let r,
-          g,
-          b = Math.floor(Math.random * 255);
+        let r = Math.floor(Math.random() * 255);
+        let g = Math.floor(Math.random() * 255);
+        let b = Math.floor(Math.random() * 255);
 
-        return `rgb(${r}, ${g}, ${b});`;
+        const color = `rgb(${r}, ${g}, ${b});`;
+        console.log(color);
+        return color;
       }
 
       function randomUsername() {
@@ -194,15 +196,21 @@
       }
 
       function sendMessage() {
-        const chatMessage = `<li class='chat-msg'><span class='username'><strong>${username}</strong></span>: ${
-          chatBox.value
-        }</li>`;
-        socket.emit("chat message", chatMessage);
+        // const chatMessage = `<li class='chat-msg'><span style="color:${randomColorForUsername()}}" class='username'><strong>${username}</strong></span>: ${
+        //   chatBox.value
+        // }</li>`;
 
-        const li = document.createElement("li");
-        li.innerHTML = chatMessage;
+        chatAttributes = {
+          username: username,
+          color: usernameColor,
+          value: chatBox.value
+        };
+        socket.emit("chat message", chatAttributes);
 
-        msgStream.append(li);
+        // const li = document.createElement("li");
+        // li.innerHTML = chatMessage;
+
+        // msgStream.append(li);
         chatBox.value = "";
       }
 
@@ -214,18 +222,19 @@
 
       socket.on("connect", () => {
         username = randomUsername();
+        usernameColor = randomColorForUsername();
 
         // const span = document.createElement("span");
         // span.textContent = username;
         // span.style.color = randomColorForUsername();
 
         createChatMessage(
-          `<li class='chat-msg'>Welcome to the chat room, you've been given a temporary username: <span class='username'><strong>${username}</strong></span></li>`
+          `<li class='chat-msg'>Welcome to the chat room, you've been given a temporary username: <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>`
         );
 
         socket.emit(
           "welcome msg",
-          `<li class='chat-msg'>Another user <span class='username'><strong>${username}</strong></span> has joined the chat room</li>`
+          `<li class='chat-msg'>Another user <span  style="color:${usernameColor}}" class='username'><strong>${username}</strong></span> has joined the chat room</li>`
         );
       });
 
@@ -244,8 +253,8 @@
         console.log(msg);
       });
 
-      socket.on("chat message", async msg => {
-        await createChatMessage(msg);
+      socket.on("chat message", msg => {
+        createChatMessage(msg);
       });
 
       sendButton.addEventListener("click", () => sendMessage());

@@ -10,19 +10,25 @@ io.on("connection", function(socket) {
   console.log("Client connected.");
 
   socket.on("welcome msg", msg => {
-    console.log(msg);
     socket.broadcast.emit("welcome msg", msg);
   });
 
   socket.on("chat message", data => {
     console.log(data);
-    socket.broadcast.emit("chat message", data);
+    io.emit(
+      "chat message",
+      `<li class='chat-msg'><span style="color:${
+        data.color
+      }}" class='username'><strong>${data.username}</strong></span>: ${
+        data.value
+      }</li>`
+    );
   });
 
   // Disconnect listener
   socket.on("disconnect", msg => {
     console.log("Client disconnected.");
-    socket.broadcast.emit("disconnect msg", msg);
+    io.emit("disconnect msg", msg);
   });
 });
 
