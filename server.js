@@ -24,6 +24,10 @@ io.on("connection", function(socket) {
     );
   });
 
+  socket.on("image", data => {
+    socket.broadcast.emit("image", data);
+  });
+
   // Disconnect listener
   socket.on("disconnect", () => {
     console.log("Client disconnected.");

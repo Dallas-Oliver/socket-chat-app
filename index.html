@@ -53,7 +53,11 @@
         font-size: 20px;
       }
 
-      #canvas {
+      /* #canvas {
+        margin: 20px;
+      } */
+
+      li {
         margin: 20px;
       }
 
@@ -98,6 +102,7 @@
       <section id="video-container">
         <video id="video"></video>
       </section>
+
       <section id="chat-container">
         <ul id="msg-stream"></ul>
       </section>
@@ -133,6 +138,7 @@
           audio: false
         })
         .then(localMediaStream => {
+          console.log(localMediaStream);
           video.srcObject = localMediaStream;
           video.play();
         })
@@ -146,12 +152,19 @@
         canvas.height = 150;
         canvas.width = 200;
         const image = ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const base64Img = canvas.toDataURL(image);
         const li = document.createElement("li");
         li.append(canvas);
         msgStream.append(li);
+
+        const imageDetails = {
+          username: username,
+          color: usernamecolor,
+          image: base64Img
+        };
+
+        socket.emit("image", imageDetails);
         console.log(canvas);
-        // const data = canvas.toDataURL("image/jpeg");
-        // return data;
       }
 
       function randomColorForUsername() {
@@ -229,14 +242,6 @@
         createChatMessage(msg);
       });
 
-      socket.on("disconnect", () => {
-        chatAttributes = {
-          username: username,
-          color: usernameColor
-        };
-        socket.emit("disconnect msg", chatAttributes);
-      });
-
       socket.on("disconnect msg", msg => {
         console.log(msg);
         createChatMessage(msg);
@@ -244,6 +249,29 @@
 
       socket.on("chat message", msg => {
         createChatMessage(msg);
+      });
+
+      socket.on("image", data => {
+        // const img = document.createElement("img");
+        // img.src = data.image;
+        // const li = document.createElement("li");
+        // li.appendChild(img);
+        // msgStream.appendChild(li);
+        createChatMessage(
+          `<li class''chat-msg'><span style="color:${
+            data.color
+          }}" class='username'><strong>${
+            data.username
+          }</strong></span>: <img src=${data.image} /> </li>`
+        );
+      });
+
+      socket.on("disconnect", () => {
+        chatAttributes = {
+          username: username,
+          color: usernameColor
+        };
+        socket.emit("disconnect msg", chatAttributes);
       });
 
       sendButton.addEventListener("click", () => sendMessage());
