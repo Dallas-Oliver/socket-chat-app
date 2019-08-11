@@ -25,7 +25,7 @@ io.on("connection", function(socket) {
   });
 
   socket.on("image", data => {
-    socket.broadcast.emit("image", data);
+    io.emit("image", data);
   });
 
   // Disconnect listener

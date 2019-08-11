@@ -88,6 +88,7 @@
         list-style-type: none;
       }
     </style>
+    <link href="popper.min.js"></link>
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -130,7 +131,7 @@
       const socket = io.connect();
 
       let username;
-      let usernamecolor;
+      let usernameColor;
 
       navigator.mediaDevices
         .getUserMedia({
@@ -153,18 +154,16 @@
         canvas.width = 200;
         const image = ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const base64Img = canvas.toDataURL(image);
-        const li = document.createElement("li");
-        li.append(canvas);
-        msgStream.append(li);
+
+        console.log(usernameColor);
 
         const imageDetails = {
           username: username,
-          color: usernamecolor,
+          color: usernameColor,
           image: base64Img
         };
 
         socket.emit("image", imageDetails);
-        console.log(canvas);
       }
 
       function randomColorForUsername() {
