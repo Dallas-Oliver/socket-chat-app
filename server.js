@@ -4,11 +4,7 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const path = require("path");
 
-app.use(express.static(path.join(__dirname, "public/login/login-styles.css")));
-
-app.use("/public", (req, res) => {
-  res.sendFile(path.join((__dirname, "/login/login.html")));
-});
+app.use(express.static("public/login"));
 
 io.on("connection", function(socket) {
   console.log("Client connected.");
