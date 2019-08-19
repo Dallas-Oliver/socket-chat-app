@@ -7,13 +7,39 @@
     <title>Chatroom Login</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="login-styles.css" />
+
     <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous"
     />
+    <style>
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+      }
+
+      #container {
+        height: 100%;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 35% 30% 35%;
+        grid-template-rows: 20% 60% 20%;
+      }
+
+      #login-form {
+        grid-column-start: 2;
+        grid-column-end: 2;
+        grid-row-start: 2;
+        grid-row-start: 2;
+
+        text-align: center;
+        border: 1px solid black;
+        border-radius: 15px;
+      }
+    </style>
   </head>
   <body>
     <div id="container">
@@ -25,6 +51,15 @@
       </section>
     </div>
 
-    <script src="login.js" async defer></script>
+    <script>
+      const inputField = document.getElementById("input-field");
+      const button = document.getElementById("login-button");
+
+      async function login() {
+        const login_req = await fetch("/chatroom");
+      }
+
+      button.addEventListener("click", () => login());
+    </script>
   </body>
 </html>
