@@ -47,17 +47,25 @@
         <h1 id="login-header">Login</h1>
         <label for="input-field">username</label>
         <input id="input-field" />
-        <button id="login-button">Login</button>
+        <button type="submit" id="login-button">Login</button>
       </section>
     </div>
 
     <script>
       const inputField = document.getElementById("input-field");
       const button = document.getElementById("login-button");
+      let username;
 
       async function login() {
-        window.location.replace("/login");
+        username = inputField.value;
+
+        if (username) {
+          window.location.href = `/login/${username}`;
+        }
+        saveUsername(username);
       }
+
+      function saveUsername(username) {}
 
       button.addEventListener("click", () => login());
     </script>

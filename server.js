@@ -2,13 +2,13 @@ const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
-const path = require("path");
 
 app.use("/chatroom", express.static("public/chatroom"));
 app.use("/", express.static("public/login"));
 
-app.get("/login", (req, res) => {
-  res.redirect("/chatroom");
+app.get("/login/:username", (req, res) => {
+  const username = req.params.username;
+  res.redirect(`/chatroom`);
 });
 
 // app.get("/chatroom", (req, res) => {

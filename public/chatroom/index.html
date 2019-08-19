@@ -220,7 +220,7 @@ function createChatMessage(message) {
 }
 
 socket.on("connect", () => {
-  username = randomUsername();
+  username =  randomUsername();
   usernameColor = randomColorForUsername();
 
   createChatMessage(
