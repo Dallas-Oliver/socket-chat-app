@@ -4,21 +4,19 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const path = require("path");
 
-app.use(express.static("public"));
+app.use("/chatroom", express.static("public/chatroom"));
+app.use("/", express.static("public/login"));
 
-app.get("/", (req, res) => {
-  const options = {
-    root: path.join(__dirname, "public/login")
-  };
-  res.sendFile("/index.html", options);
+app.get("/login", (req, res) => {
+  res.redirect("/chatroom");
 });
 
-app.get("/chatroom", (req, res) => {
-  const options = {
-    root: path.join(__dirname, "public/chatroom")
-  };
-  res.sendFile("index.html", options);
-});
+// app.get("/chatroom", (req, res) => {
+//   const options = {
+//     root: path.join(__dirname, "public/chatroom")
+//   };
+//   res.redirect("/chatroom", options);
+// });
 
 io.on("connection", function(socket) {
   console.log("Client connected.");

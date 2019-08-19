@@ -247,11 +247,7 @@ socket.on("chat message", msg => {
 });
 
 socket.on("image", data => {
-  // const img = document.createElement("img");
-  // img.src = data.image;
-  // const li = document.createElement("li");
-  // li.appendChild(img);
-  // msgStream.appendChild(li);
+
   createChatMessage(
     `<li class''chat-msg'><span style="color:${
       data.color
