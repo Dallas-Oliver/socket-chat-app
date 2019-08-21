@@ -219,9 +219,21 @@ function createChatMessage(message) {
 }
 
 socket.on("connect", () => {
-  const params = new URLSearchParams(window.location.search);
   usernameColor = randomColorForUsername();
-  username = params.get("username") || randomUsername();
+  const params = new URLSearchParams(window.location.search);
+  usernameParam = params.get("username");
+
+  if (!usernameParam) {
+    username = randomUsername();
+  } else if(usernameParam) {
+    if(!sessionStorage.getItem('username')) {
+      sessionStorage.setItem('username', usernameParam);
+      username = usernameParam;
+    } else {
+      username = sessionStorage.getItem('username');
+    }
+  } 
+
   socket.emit(
     "welcome msg",
     `<li class='chat-msg'>Another user <span  style="color:${usernameColor}}" class='username'><strong>${username}</strong></span> has joined the chat room</li>`
@@ -230,7 +242,6 @@ socket.on("connect", () => {
   createChatMessage(
     `<li class='chat-msg'>Welcome to the chat room!<br/> you've been given a temporary username: <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>`
   );
-  console.log(location.search)
 });
 
 // socket.on('created username', (name) => {
