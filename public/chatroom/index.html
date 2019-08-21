@@ -135,7 +135,6 @@ navigator.mediaDevices
     audio: false
   })
   .then(localMediaStream => {
-    console.log(localMediaStream);
     video.srcObject = localMediaStream;
     video.play();
   })
@@ -220,18 +219,31 @@ function createChatMessage(message) {
 }
 
 socket.on("connect", () => {
-  username =  randomUsername();
+  const params = new URLSearchParams(window.location.search);
   usernameColor = randomColorForUsername();
-
-  createChatMessage(
-    `<li class='chat-msg'>Welcome to the chat room!<br/> you've been given a temporary username: <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>`
-  );
-
+  username = params.get("username") || randomUsername();
   socket.emit(
     "welcome msg",
     `<li class='chat-msg'>Another user <span  style="color:${usernameColor}}" class='username'><strong>${username}</strong></span> has joined the chat room</li>`
   );
+
+  createChatMessage(
+    `<li class='chat-msg'>Welcome to the chat room!<br/> you've been given a temporary username: <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>`
+  );
+  console.log(location.search)
 });
+
+// socket.on('created username', (name) => {
+  
+    
+//     if(!username) {
+      
+    
+//     } else {
+//       username = name;
+//       createChatMessage(`<li class='chat-msg'>Welcome to the chat room <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>!<br/>`)
+//     }
+// })
 
 socket.on("welcome msg", msg => {
   createChatMessage(msg);

@@ -8,7 +8,10 @@ app.use("/", express.static("public/login"));
 
 app.get("/login/:username", (req, res) => {
   const username = req.params.username;
-  res.redirect(`/chatroom`);
+  res.redirect(`/chatroom?username=${username}`);
+  // io.on("connection", function(socket) {
+  //   io.to(socket.id).emit("created username", username);
+  // });
 });
 
 // app.get("/chatroom", (req, res) => {
