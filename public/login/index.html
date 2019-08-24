@@ -38,21 +38,27 @@
         text-align: center;
         border: 1px solid black;
         border-radius: 15px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
     </style>
   </head>
   <body>
     <div id="container">
       <section id="login-form">
-        <h1 id="login-header">Login</h1>
-        <label for="input-field">username</label>
-        <input id="input-field" />
+        <h1 id="login-header"></h1>
+        <label for="username-input-field">username</label>
+        <input id="username-input-field" />
+        <label for="pass-input-field">password</label>
+        <input id="pass-input-field" />
         <button type="submit" id="login-button">Login</button>
       </section>
     </div>
 
     <script>
-      const inputField = document.getElementById("input-field");
+      const inputField = document.getElementById("username-input-field");
       const button = document.getElementById("login-button");
       let username;
 
@@ -61,6 +67,8 @@
 
         if (username) {
           window.location.href = `/login/${username}`;
+        } else {
+          window.location.href = `/chatroom`;
         }
       }
 
