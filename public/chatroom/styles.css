@@ -1,0 +1,73 @@
+body,
+html {
+  height: 100%;
+  width: 100%;
+}
+
+#container {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 65% 35%;
+  grid-template-rows: 10% 75% 15%;
+}
+
+#header {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 1;
+  grid-row-end: 1;
+  margin: 20px 40px 20px 50px;
+}
+
+#video-container {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 2;
+  grid-row-end: 2;
+}
+
+#video {
+  width: 100%;
+  height: 100%;
+}
+
+#msg-stream {
+  padding-left: 0px;
+  margin: 20px;
+  font-size: 20px;
+}
+
+#canvas {
+  margin: 20px;
+}
+
+li {
+  margin: 20px;
+}
+
+#chat-container {
+  grid-column-start: 2;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 2;
+  width: 94%;
+  margin: 20px 20px 0px 20px;
+
+  overflow: scroll;
+}
+
+#input {
+  margin: 20px;
+  grid-column-start: 2;
+  grid-column-end: 2;
+  grid-row-start: 3;
+  grid-row-end: 3;
+}
+
+#chat-box {
+  margin-bottom: 5px;
+}
+
+#msg-stream {
+  list-style-type: none;
+}
