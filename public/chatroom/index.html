@@ -222,45 +222,39 @@ socket.on("connect", () => {
   usernameColor = randomColorForUsername();
   const params = new URLSearchParams(window.location.search);
   usernameParam = params.get("username");
+  console.log(usernameParam)
 
-  if (!usernameParam) {
+  if (usernameParam === null) {
     username = randomUsername();
     createChatMessage(
     `<li class='chat-msg'>Welcome to the chat room!<br/> you've been given a temporary username: <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>`
   );
-  } else if(usernameParam) {
+  console.log('random name used')
+
+  } else if(usernameParam !== null) {
+
     if(!sessionStorage.getItem('username')) {
       sessionStorage.setItem('username', usernameParam);
       username = usernameParam;
       createChatMessage(`<li class='chat-msg'>Welcome to the chat room <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>!<br/>`)
-      }
-    } else {
-      username = sessionStorage.getItem('username');
+        console.log('new local username created and used', sessionStorage.getItem('username'))
+      } else {
+        username = sessionStorage.getItem('username');
       createChatMessage(`<li class='chat-msg'>Welcome to the chat room <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>!<br/>`)
-
+        console.log('existing local username used');
+      }
     }
-  });
 
-  socket.emit(
+    socket.emit(
     "welcome msg",
     `<li class='chat-msg'>Another user <span  style="color:${usernameColor}}" class='username'><strong>${username}</strong></span> has joined the chat room</li>`
   );
+  });
 
+  
 
  
-  
 
-// socket.on('created username', (name) => {
-  
-    
-//     if(!username) {
-      
-    
-//     } else {
-//       username = name;
-//       createChatMessage(`<li class='chat-msg'>Welcome to the chat room <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>!<br/>`)
-//     }
-// })
 
 socket.on("welcome msg", msg => {
   createChatMessage(msg);
