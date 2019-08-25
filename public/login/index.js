@@ -1,4 +1,4 @@
-const inputField = document.getElementById("username-input-field");
+const usernameInputField = document.getElementById("username-input-field");
 const button = document.getElementById("login-button");
 const header = document.getElementById("login-header");
 const form = document.getElementById("login-form");
@@ -15,7 +15,7 @@ checkStorage();
 
 console.log(sessionStorage);
 async function login() {
-  username = inputField.value;
+  username = usernameInputField.value;
 
   if (username) {
     window.location.href = `/login/${username}`;
@@ -24,4 +24,11 @@ async function login() {
   }
 }
 
+function formValidation(e) {
+  e.preventDefault();
+
+  console.log(e.data);
+}
+
 button.addEventListener("click", () => login());
+usernameInputField.addEventListener("input", e => formValidation(e));
