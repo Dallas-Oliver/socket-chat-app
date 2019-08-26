@@ -19,9 +19,11 @@ body {
   grid-row-start: 2;
 
   text-align: center;
-  border: 1px solid black;
+  border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 15px;
   box-shadow: 2px 4px 25px rgba(0, 0, 0, 0.1);
+
+  padding: 20px;
 
   display: flex;
   flex-direction: column;
@@ -31,6 +33,7 @@ body {
 }
 
 #login-header {
+  margin: 20px 20px 10px 20px;
 }
 
 #login-form {
@@ -49,6 +52,45 @@ body {
   border: 2px solid rgba(22, 100, 185, 0.9);
 }
 
+#username-input-field {
+  margin: 10px 0px 5px 0px;
+}
+
+#pass-input-field {
+  margin: 5px 0px 10px 0px;
+}
+
+#username-validate-msg-popup {
+  padding: 20px;
+  margin: 20px 20px 20px 5px;
+  color: #fe6a6c;
+  text-align: left;
+  font-size: 2rem;
+  list-style-type: none;
+  border-color: rgba(255, 0, 0, 0.4);
+  border: 2px solid;
+  border-radius: 15px;
+  font-family: "Open Sans", sans-serif;
+
+  box-shadow: 2px 4px 25px rgba(0, 0, 0, 0.2);
+
+  grid-column-start: 2;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-start: 2;
+}
+
+#validation-msg-popup-container {
+  grid-column-start: 3;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-start: 2;
+
+  display: grid;
+  grid-template-columns: 5% 75% 20%;
+  grid-template-rows: 10% 65% 25%;
+}
+
 #login-button {
   padding: 8px 15px;
   font-size: 22px;
@@ -61,4 +103,8 @@ body {
 
 .hide {
   display: none;
+}
+
+.invalid-input {
+  border: 2px solid red;
 }

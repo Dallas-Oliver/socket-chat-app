@@ -14,19 +14,22 @@
       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous"
     />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400i&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
   <body>
     <div id="container">
       <section id="login-form-body">
-        <h2 id="login-header"></h2>
+        <h3 id="login-header"></h3>
         <div id="login-form">
           <input
             id="username-input-field"
             placeholder="username"
             class="form-item input-fields"
           />
-          <p id="username-validate-msg" class="hide"></p>
 
           <input
             id="pass-input-field"
@@ -39,6 +42,21 @@
           </button>
         </div>
       </section>
+      <div id="validation-msg-popup-container" class="hide">
+        <ul id="username-validate-msg-popup">
+          <li id="char-num-validation">
+            username must contain between 5 and 20 characters
+          </li>
+          <hr />
+          <li id="uppercase-validation">
+            username must contain at least one uppercase character
+          </li>
+          <hr />
+          <li id="special-char-validation">
+            username can contain only " _-. " as special characters
+          </li>
+        </ul>
+      </div>
     </div>
 
     <script src="index.js" async defer></script>
