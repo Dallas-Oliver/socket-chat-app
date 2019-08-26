@@ -12,6 +12,10 @@ app.get("/login/:username", (req, res) => {
   res.redirect(`/chatroom?username=${username}`);
 });
 
+app.get("/homepage", (req, res) => {
+  res.redirect(`/`);
+});
+
 // app.get("/chatroom", (req, res) => {
 //   const options = {
 //     root: path.join(__dirname, "public/chatroom")

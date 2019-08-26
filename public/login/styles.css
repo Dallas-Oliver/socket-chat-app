@@ -27,6 +27,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: 2rem;
+}
+
+#login-header {
 }
 
 #login-form {
@@ -36,5 +40,25 @@ body {
 }
 
 .form-item {
-  margin: 5px 0px 5px 0px;
+  margin: 10px 0px 10px 0px;
+}
+
+.input-fields {
+  padding: 13px 23px 7px 10px;
+  border-radius: 6px;
+  border: 2px solid rgba(22, 100, 185, 0.9);
+}
+
+#login-button {
+  padding: 8px 15px;
+  font-size: 22px;
+  margin-top: 15px;
+}
+
+.labels {
+  text-align: left;
+}
+
+.hide {
+  display: none;
 }

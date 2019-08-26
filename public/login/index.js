@@ -6,7 +6,7 @@ let username;
 
 function checkStorage() {
   if (sessionStorage.getItem("username")) {
-    header.textContent = `Welcome back ${sessionStorage.getItem("username")}!`;
+    window.location.href = `/login/${username}`;
   } else {
     header.textContent = `please create a username and password`;
   }
@@ -14,13 +14,15 @@ function checkStorage() {
 checkStorage();
 
 console.log(sessionStorage);
+
 async function login() {
   username = usernameInputField.value;
 
-  if (username) {
+  if (username !== null) {
     window.location.href = `/login/${username}`;
   } else {
     window.location.href = `/chatroom`;
+    sessionStorage.clear();
   }
 }
 

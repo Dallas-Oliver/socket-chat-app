@@ -19,12 +19,21 @@
   <body>
     <div id="container">
       <section id="login-form-body">
-        <h1 id="login-header"></h1>
+        <h2 id="login-header"></h2>
         <div id="login-form">
-          <label for="username-input-field" class="form-item">username</label>
-          <input id="username-input-field" class="form-item" />
-          <label for="pass-input-field" class="form-item">password</label>
-          <input id="pass-input-field" class="form-item" />
+          <input
+            id="username-input-field"
+            placeholder="username"
+            class="form-item input-fields"
+          />
+          <p id="username-validate-msg" class="hide"></p>
+
+          <input
+            id="pass-input-field"
+            placeholder="password"
+            class="form-item input-fields"
+          />
+          <p id="password-validate-msg" class="hide"></p>
           <button type="submit" id="login-button" class="btn btn-primary">
             Login
           </button>

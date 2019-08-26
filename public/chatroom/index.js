@@ -2,6 +2,7 @@ const chatBox = document.getElementById("chat-box");
 const msgStream = document.getElementById("msg-stream");
 const sendButton = document.getElementById("send-msg");
 const captureButton = document.getElementById("capture-img");
+const logoutButton = document.getElementById("logout-button");
 
 const socket = io.connect();
 
@@ -166,5 +167,11 @@ socket.on("disconnect", () => {
   socket.emit("disconnect msg", chatAttributes);
 });
 
+function logout() {
+  sessionStorage.clear();
+  window.location.href = `/homepage`;
+}
+
 sendButton.addEventListener("click", () => sendMessage());
 captureButton.addEventListener("click", () => captureImage());
+logoutButton.addEventListener("click", () => logout());
