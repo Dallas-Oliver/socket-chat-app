@@ -91,6 +91,11 @@ body {
   grid-template-rows: 10% 65% 25%;
 }
 
+#password-validate-msg {
+  font-size: 1.5rem;
+  color: #fe6a6c;
+}
+
 #login-button {
   padding: 8px 15px;
   font-size: 22px;

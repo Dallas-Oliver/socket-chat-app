@@ -1,4 +1,5 @@
 const usernameInputField = document.getElementById("username-input-field");
+const passInputField = document.getElementById("pass-input-field");
 const button = document.getElementById("login-button");
 const header = document.getElementById("login-header");
 const form = document.getElementById("login-form");
@@ -6,11 +7,13 @@ const validateMsgPopup = document.getElementById("username-validate-msg-popup");
 const validateContainer = document.getElementById(
   "validation-msg-popup-container"
 );
+const passwordValMsg = document.getElementById("password-validate-msg");
 const charNumValidateMsg = document.getElementById("char-num-validation");
 const uppercaseValMsg = document.getElementById("uppercase-validation");
 const specialCharValMsg = document.getElementById("special-char-validation");
 let username;
 let usernameValid = false;
+passwordValid = false;
 
 function checkStorage() {
   if (sessionStorage.getItem("username")) {
@@ -25,13 +28,27 @@ console.log(sessionStorage);
 
 async function login() {
   username = usernameInputField.value;
-  if (usernameValid === true) {
+  if (usernameValid === true && passwordValid === true) {
     if (username !== null) {
       window.location.href = `/login/${username}`;
     } else if (username === null) {
       window.location.href = `/chatroom`;
       sessionStorage.clear();
     }
+  }
+}
+
+function passwordFormValidation(e) {
+  const passwordLength = passInputField.value.length;
+  console.log(e.data);
+  if (passwordLength < 8) {
+    passwordValMsg.classList.remove("hide");
+    passInputField.style.borderColor = "#fe6a6c";
+    passwordValMsg.textContent = "password should be at least 8 characters";
+  } else {
+    passwordValMsg.classList.add("hide");
+    passInputField.style.borderColor = "";
+    passwordValid = true;
   }
 }
 
@@ -71,35 +88,26 @@ function usernameFormValidation(e) {
   if (charNum === true && uppercase === true && specialChars === true) {
     validateMsgPopup.style.borderColor = "#47C664";
     usernameValid = true;
+    usernameInputField.style.borderColor = "";
   } else {
     validateMsgPopup.style.borderColor = "#fe6a6c";
     usernameValid = false;
+    usernameInputField.style.borderColor = "#fe6a6c";
   }
-
-  //   //passsword must contain at least 8 characters(letters, numbers, special characters)
-  //   //password must contain at least one uppercase and one lowercase character
-  //   //password can contain only "!_$^*" as special characters
-
-  //   const specialRegex = /[!@#%&()-+=\|'";:,<.>/?]/g;
-
-  //   if (specialRegex.test(input) === true) {
-  //     usernameInputField.classList.add("invalid-input");
-  //     validateMsg.classList.remove("hide");
-  //     validateMsg.textContent += `username can only contain "$*^_" as special characters!`;
-  //   }
 }
 
 function displayUsernameRequirements(e) {
   validateContainer.classList.remove("hide");
 }
 
-// function hideUsernameRequirements(e) {
-//   validateContainer.classList.add("hide");
-// }
+function hideUsernameRequirements(e) {
+  validateContainer.classList.add("hide");
+}
 
 button.addEventListener("click", () => login());
 usernameInputField.addEventListener("focus", e =>
   displayUsernameRequirements(e)
 );
-// usernameInputField.addEventListener("blur", e => hideUsernameRequirements(e));
+usernameInputField.addEventListener("blur", e => hideUsernameRequirements(e));
 usernameInputField.addEventListener("input", e => usernameFormValidation(e));
+passInputField.addEventListener("input", e => passwordFormValidation(e));
