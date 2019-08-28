@@ -80,7 +80,7 @@ body {
   grid-row-start: 2;
 }
 
-#validation-msg-popup-container {
+.validation-msg-popup-container {
   grid-column-start: 3;
   grid-column-end: 3;
   grid-row-start: 2;
@@ -112,4 +112,65 @@ body {
 
 .invalid-input {
   border: 2px solid red;
+}
+
+#ref {
+  background: red;
+  width: 100px;
+  height: 100px;
+}
+
+#pop {
+  background: green;
+  width: 100px;
+  height: 100px;
+}
+
+/**
+ * For simplicity, the arrow will be just a square.
+ * You can style your arrow to look like a triangle
+ * and use the `[x-placement]` attribute to control
+ * its direction in relation to the reference element.
+ */
+#pop [x-arrow] {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: green;
+}
+
+/**
+ * We need to add margin to the side
+ * touching the reference element
+ * to address for the arrow size
+ */
+#pop[x-placement="bottom"] {
+  margin-top: 10px;
+}
+#pop[x-placement="left"] {
+  margin-right: 10px;
+}
+#pop[x-placement="top"] {
+  margin-bottom: 10px;
+}
+#pop[x-placement="right"] {
+  margin-left: 10px;
+}
+
+/**
+ * The arrow element lives *inside* the popper
+ * so we need to offset it by its size to position
+ * it outside the popper element.
+ */
+#pop[x-placement="bottom"] [x-arrow] {
+  top: -10px;
+}
+#pop[x-placement="left"] [x-arrow] {
+  right: -10px;
+}
+#pop[x-placement="top"] [x-arrow] {
+  bottom: -10px;
+}
+#pop[x-placement="right"] [x-arrow] {
+  left: -10px;
 }

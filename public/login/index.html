@@ -14,14 +14,24 @@
       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous"
     />
-    <link
+
+    <script src="https://unpkg.com/popper.js"></script>
+
+    <!-- <link
       href="https://fonts.googleapis.com/css?family=Open+Sans:400i&display=swap"
       rel="stylesheet"
-    />
+    /> -->
     <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
   <body>
     <div id="container">
+      <div id="ref" aria-describedby="pop">
+        ref
+      </div>
+      <div id="pop" role="tooltip">
+        <div x-arrow></div>
+        pop
+      </div>
       <section id="login-form-body">
         <h3 id="login-header"></h3>
         <div id="login-form">
@@ -29,6 +39,7 @@
             id="username-input-field"
             placeholder="username"
             class="form-item input-fields"
+            required
           />
 
           <input
@@ -36,6 +47,7 @@
             type="password"
             placeholder="password"
             class="form-item input-fields"
+            required
           />
           <p id="password-validate-msg" class="hide"></p>
           <button type="submit" id="login-button" class="btn btn-primary">
@@ -43,7 +55,7 @@
           </button>
         </div>
       </section>
-      <div id="validation-msg-popup-container" class="hide">
+      <div class="hide validation-msg-popup-container">
         <ul id="username-validate-msg-popup">
           <li id="char-num-validation">
             username must contain between 5 and 20 characters

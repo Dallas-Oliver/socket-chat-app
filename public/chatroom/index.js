@@ -9,6 +9,38 @@ const socket = io.connect();
 let username;
 let usernameColor;
 
+class ChatMessageBase {
+  constructor(username, message, timestamp) {
+    this.username = username;
+    this.message = message;
+    this.timestamp = timestamp;
+  }
+}
+
+class ChatMessage extends ChatMessageBase {
+  constructor(username, message, timestamp) {
+    super(username, message, timestamp);
+    this.messageType = "ChatMessage";
+  }
+
+  renderToHTML() {
+    return `<p class="chat-message">[${new Date(
+      this.timestamp
+    ).toLocaleTimeString()}] ${this.username}: ${this.message}</p>`;
+  }
+}
+
+class WelcomeChatMessage extends ChatMessageBase {
+  constructor(username, timestamp) {
+    super(username, null, timestamp);
+    this.messageType = "WelcomeChatMessage";
+  }
+
+  renderToHTML() {
+    return `<p class="welcome-message">${this.username} has joined the chat room.</p>`;
+  }
+}
+
 navigator.mediaDevices
   .getUserMedia({
     video: true,
@@ -82,19 +114,25 @@ function randomUsername() {
 }
 
 function sendMessage() {
-  const chatAttributes = {
-    username: username,
-    color: usernameColor,
-    value: chatBox.value
-  };
-  socket.emit("chat message", chatAttributes);
-
+  const chatMessage = new ChatMessage(username, chatBox.value);
+  socket.emit("chat message", chatMessage);
   chatBox.value = "";
 }
 
-function createChatMessage(message) {
+function renderChatMessage(message) {
+  let chatMessage = null;
+  if (message.messageType === "ChatMessage") {
+    chatMessage = new ChatMessage(
+      message.username,
+      message.message,
+      message.timestamp
+    );
+  } else if (message.messageType === "WelcomeChatMessage") {
+    chatMessage = new WelcomeChatMessage(message.username, message.timestamp);
+  }
+
   const li = document.createElement("li");
-  li.innerHTML = message;
+  li.innerHTML = chatMessage.renderToHTML();
   msgStream.append(li);
 }
 
@@ -106,56 +144,43 @@ socket.on("connect", () => {
 
   if (usernameParam === null) {
     username = randomUsername();
-    createChatMessage(
-      `<li class='chat-msg'>Welcome to the chat room!<br/> you've been given a temporary username: <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>`
-    );
+    renderChatMessage(new WelcomeChatMessage(username));
     console.log("random name used");
   } else if (usernameParam !== null) {
     if (!sessionStorage.getItem("username")) {
       sessionStorage.setItem("username", usernameParam);
       username = usernameParam;
-      createChatMessage(
-        `<li class='chat-msg'>Welcome to the chat room <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>!<br/>`
-      );
+      renderChatMessage(new WelcomeChatMessage(username));
       console.log(
         "new local username created and used",
         sessionStorage.getItem("username")
       );
     } else if (sessionStorage.getItem("username")) {
       username = sessionStorage.getItem("username");
-      createChatMessage(
-        `<li class='chat-msg'>Welcome to the chat room <span style="color:${usernameColor}}" class='username'><strong>${username}</strong></span>!<br/>`
-      );
+      renderChatMessage(new WelcomeChatMessage(username));
       console.log("existing local username used");
     }
   }
 
-  socket.emit(
-    "welcome msg",
-    `<li class='chat-msg'>Another user <span  style="color:${usernameColor}}" class='username'><strong>${username}</strong></span> has joined the chat room</li>`
-  );
+  socket.emit("welcome msg", new WelcomeChatMessage(username));
 });
 
 socket.on("welcome msg", msg => {
-  createChatMessage(msg);
+  renderChatMessage(msg);
 });
 
 socket.on("disconnect msg", msg => {
   console.log(msg);
-  createChatMessage(msg);
+  renderChatMessage(msg);
 });
 
 socket.on("chat message", msg => {
-  createChatMessage(msg);
+  renderChatMessage(msg);
 });
 
 socket.on("image", data => {
-  createChatMessage(
-    `<li class''chat-msg'><span style="color:${
-      data.color
-    }}" class='username'><strong>${data.username}</strong></span>: <img src=${
-      data.image
-    } /> </li>`
+  renderChatMessage(
+    `<li class''chat-msg'><span style="color:${data.color}}" class='username'><strong>${data.username}</strong></span>: <img src=${data.image} /> </li>`
   );
 });
 
